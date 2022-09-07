@@ -1,6 +1,8 @@
 import { Box, TextField, Button, Grid } from "@mui/material";
-import { useState } from "react";
+import { ChangeEvent, useState } from "react";
 import { MathJax, MathJaxContext } from "better-react-mathjax";
+import axios from "axios";
+
 
 const MathJaxConfig = {
     loader: { load: ["[tex]/html"] },
@@ -45,6 +47,28 @@ function getCodeForcesPage(problemID: string){
       }).then(data => {return data.text()}).then(data => {return getProblemStatement(data)}).catch(err => {return err})
 }
 
+function playGround(inputPrograms: String){
+    axios.post("http://localhost:9000/submissions/submitSolution", {
+        pid: "1",
+        inputProgram: inputPrograms
+    }).then((res) => {console.log(res)});
+}
+
+function addTestCases(){
+    axios.post("http://localhost:9000/testcases/addTestCase", {
+        input: "Hello",
+        output: "Hello",
+        pid: "1",
+        score: 1
+    }).then((res) => {console.log(res)});
+    axios.post("http://localhost:9000/testcases/addTestCase", {
+        input: "World",
+        output: "World",
+        pid: "1",
+        score: 2
+    }).then((res) => {console.log(res)});
+
+}
 
 function App() {
     const [problemID, setProblemID] = useState("");
@@ -54,8 +78,29 @@ function App() {
         getCodeForcesPage(problemID)?.then(page => {setDisplayData(page)}).catch(err => {alert(err)});
     }
 
+    const handleButtonClickFile = (e: ChangeEvent<HTMLInputElement>) => {
+        if(!e.target.files){
+            return;
+        }
+        const file = e.target.files[0];
+        const reader = new FileReader();
+        reader.readAsText(file);
+        reader.onload = () => {
+            const tosend = reader.result as String;
+            const stuff = tosend.replace(/(\r\n|\n|\r|\t)/gm, '');
+            console.log(stuff)
+            playGround(stuff);
+        }
+        reader.onerror = () => {
+            console.log("Couldn't read file...", reader.error);
+        }
+        alert("Handle file");
+    }
+
+    addTestCases();
+
     return (
-    <div className="App">
+    <div className="app">
         <Box>
             <MathJaxContext version={3} config={MathJaxConfig}>
                 <MathJax>
@@ -76,6 +121,9 @@ function App() {
                 </Grid>
                 <Grid item> 
                     <Button variant="contained" onClick={handleButtonClick} >Show Student's Perspective</Button>
+                </Grid>
+                <Grid item> 
+                    <Button variant="contained" component="label"> Put in File... <input type="file" accept=".java" hidden multiple onChange={handleButtonClickFile} /> </Button>
                 </Grid>
             </Grid>
         </Box>
