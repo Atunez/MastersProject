@@ -70,7 +70,7 @@ function addTestCases(){
 
 }
 
-function App() {
+function TestStuff() {
     const [problemID, setProblemID] = useState("");
     const [displayData, setDisplayData] = useState();
 
@@ -97,10 +97,10 @@ function App() {
         alert("Handle file");
     }
 
-    addTestCases();
+    //addTestCases();
 
     return (
-    <div className="app">
+    <div className="TestStuff">
         <Box>
             <MathJaxContext version={3} config={MathJaxConfig}>
                 <MathJax>
@@ -131,4 +131,4 @@ function App() {
     );
 }
 
-export default App;
+export default TestStuff;
