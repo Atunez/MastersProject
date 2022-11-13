@@ -36,9 +36,9 @@ function Login(){
                 userType = "Student";
             }
         }
-        navigate(goTo);
         setCookie("userType", userType, {path: "/"});
         setCookie("userEmail", userObj.email, {path: "/"});
+        navigate(goTo);
     }
 
     useEffect(() => {

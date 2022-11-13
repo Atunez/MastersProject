@@ -13,15 +13,27 @@ router.post('/addTestCase', async (req, res) => {
     }
   }
   // Then add the actual test case
-  const newTestCase = new testCasesScheme({input: req.body.input, output: req.body.output, pid: req.body.pid, score: req.body.score})
+  const newTestCase = new testCasesScheme({input: req.body.input, output: req.body.output, pid: req.body.pid, score: req.body.score, example: req.body.example})
   newTestCase.save((err) => {
     if(err){
-      res.status(500).json({message: "Error adding new test case..."});
+      res.status(500).json({message: "Error adding new test case...", error: err, inp: req.body});
     }else{
       res.status(201).json({message: "Added test case..."});
     }
   });
 });
+
+// get all test cases that are examples...
+router.put('/getExampleCases', async (req, res) => {
+  const allTestCases = await testCasesScheme.find({pid: req.body.pid})
+  const output = []
+  for(const tcase of allTestCases){
+    if(tcase.example){
+      output[output.length] = tcase
+    }
+  }
+  res.status(201).json({message: "Got All Test Cases", exampleTests: output})
+})
 
 // function dealWithStuff(){
 //     // Connect to the DB

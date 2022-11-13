@@ -2,25 +2,24 @@ const mongoose = require('mongoose');
 // Each submission involves...
 const usersSchema = new mongoose.Schema(
     {
-        // The program itself...
-        inputProgram: {
+        // Email of the user, is unique...
+        email: {
             required: true,
             type: String
         },
-        // The problem this program is meant to solve...
-        pid: {
+        // User's First Name...
+        firstName: {
             required: true,
             type: String
         },
-        // The result of the program...
-        result: {
-            required: false,
-            type: [Number]
+        // User's Last name...
+        lastName: {
+            required: true,
+            type: String
         },
-        // Dump whatever the judge says as the output here...
-        // We will do lazy evaluation and stop the executation of tests on the first failed test...
-        judgeResult: {
-            required: false,
+        // Classes they are in
+        classesTaking: {
+            required: true,
             type: [String]
         }
     }, 

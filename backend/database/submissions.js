@@ -21,7 +21,10 @@ router.post('/submitSolution', async (req, res) => {
     for(const test of testCases){
         // If you failed the last test then RIP...
         if(failedLastTest) break;
+        console.log(test);
         // But otherwise, just go through all the tests like normal
+        console.log(test.input)
+        console.log(test.output)
         const submissionData = JSON.stringify({
             "source_code": req.body.inputProgram,
             "language_id": 62, // Hard-coded to be java...
@@ -46,14 +49,17 @@ router.post('/submitSolution', async (req, res) => {
                 headers: {}
             }
             // Remove this to a different class...
-            await sleep(5000);
+            await sleep(1000);
             await axios(resultsConfig).then(resps => {
                 // If you failed the test then no need to continue...
                 submissionRecord.push(JSON.stringify(resps.data));
-                totalGrade.push(test.score);
                 if(resps.data.status.description != "Accepted"){
+                    console.log("Failed Test...")
                     failedLastTest = true;
+                }else{
+                    totalGrade.push(test.score);
                 }
+                console.log(resps.data);
             }).catch(err => {
                 res.status(500).json({message: err})
                 return;

@@ -16,6 +16,10 @@ const testCasesScheme = new mongoose.Schema(
         score: {
             required: true,
             type: Number
+        },
+        example: {
+            required: false,
+            type: Boolean
         }
     }, 
     {timestamps: true});

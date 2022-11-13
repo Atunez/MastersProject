@@ -20,6 +20,8 @@ mongoose.connection.on('open', () => console.log("Connect to DB"));
 
 var testCasesAPI = require("./database/testCases");
 var submissionsAPI = require("./database/submissions");
+var classesAPI = require("./database/classes");
+var usersAPI = require("./database/users");
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -34,6 +36,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use('/testcases', testCasesAPI);
 app.use('/submissions', submissionsAPI);
+app.use('/classes', classesAPI);
+app.use('/user', usersAPI);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

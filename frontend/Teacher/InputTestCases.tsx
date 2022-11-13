@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import "./styles.css";
+import React, { useEffect, useState } from "react";
+import "./../styles.css";
 import Dropzone from "react-dropzone";
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
@@ -8,7 +8,9 @@ import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
-import { FormControlLabel, FormGroup, Switch, TextField } from "@mui/material";
+import { Button, FormControlLabel, FormGroup, Switch, TextField } from "@mui/material";
+import { Navigate, useLocation, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 interface readFiles {
     name: String,
@@ -28,6 +30,17 @@ function InputTestCases(){
     const [testcases, setTestcases] = useState<TestCases[]>([]);
     const [grades, setGrades] = useState<number[]>([]);
     const [examples, setExamples] = useState<boolean[]>([]);
+    const [problemName, setProblemName] = useState("");
+
+    const location = useLocation();
+    const navigate = useNavigate();
+    useEffect(() => {
+      if(location.state === null){
+        navigate("/TeacherPage")
+      }
+    }, [])
+    console.log(location.state)
+
     // Move Files from readFiles format to an actual TestCases format...
     const formatData = (files: readFiles[]) => {
       var output:TestCases[] = []
@@ -76,9 +89,37 @@ function InputTestCases(){
         setTestcases(d);
       }).catch(err => { console.log(err) });
     
+    const getProblemSet = () => {
+      const output = {}
+      for(var i = 0; i < testcases.length; i++){
+        if(testcases[i].error !== ""){
+          continue;
+        }
+        output["test" + i] = {input: testcases[i].inputContent, output: testcases[i].outputContent, example: examples[i], score: grades[i]}
+      }
+      return JSON.stringify(output)
+    }
+
+    const submitProblem = () => {
+      if(problemName !== ""){
+        console.log("Submitting Problem...")
+
+        axios.post("http://localhost:9000/classes/addAssignment", {
+            classKey: location.state.key.classKey,
+            problem: problemName,
+            problemSet: getProblemSet()
+        })  
+      }
+      navigate(-1)
+    }
     // JSX To return....
     return (
       <div className="App">
+        <TextField 
+          label="Problem Name"
+          value={problemName}
+          onChange={e => {setProblemName(e.target.value)}}
+        />
         <Dropzone onDrop={handleDrop}>
           {({ getRootProps, getInputProps }) => (
             <div {...getRootProps({ className: "dropzone" })}>
@@ -143,6 +184,10 @@ function InputTestCases(){
             </Accordion>)
           })}
         </div>
+        <br />
+        <Button variant="contained" onClick={submitProblem}>
+          Submit Problem
+        </Button>
       </div>
     );
   }

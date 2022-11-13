@@ -17,6 +17,26 @@ const classesSchema = new mongoose.Schema(
             required: true,
             type: String
         },
+        // Password to join the actual class
+        classPassword: {
+            required: true,
+            type: String
+        },
+        // List of Students
+        members: {
+            required: false,
+            type: [String]
+        },
+        // List of Class Assignments
+        assignments: {
+            required: false,
+            type: [String]
+        }, 
+        // List of Prixs IDs...
+        prix: {
+            required: false,
+            type: [String]
+        }
     }, 
     {timestamps: true});
 

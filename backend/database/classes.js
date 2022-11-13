@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var axios = require('axios');
 const classesSchema = require("./classesSchema");
+const newClassesKeySize = 8;
 
 function generateClassKey(length){
     // Generates a new key....
@@ -16,12 +17,13 @@ function generateClassKey(length){
 // deal with adding a new class...
 router.post('/addClass', async (req, res) => {
     // Generate a new key
-    const keyToUse = generateClassKey(7);
+    const keyToUse = generateClassKey(newClassesKeySize);
     // Then submit the class to the database
     const newClass = new classesSchema({
-        className: req.body.inputProgram, 
-        instructor: req.body.pid, 
-        classKey: keyToUse});
+        className: req.body.className, 
+        instructor: req.body.instructor, 
+        classKey: keyToUse,
+        classPassword: req.body.password});
     newClass.save((err) => {
         if(err){
             res.status(500).json({message: "Error adding new Class to DB..."});
@@ -30,5 +32,43 @@ router.post('/addClass', async (req, res) => {
         }
     });
 });
+
+// Add some student to a class
+router.put('/addStudentToClass', async (req, res) => {
+    const classToGet = await classesSchema.findOne({classKey: req.body.classKey});
+    if(req.body.classPassword != classToGet.classPassword){
+        res.status(401).json({message: "Incorrect Class Password"})
+    }else{
+        classToGet.members[Object.keys(classToGet.members).length] = req.body.studentObj
+        await classToGet.save();
+        res.status(201).json({message: "Added student to class"});
+    }
+});
+
+// Given a class key, return the class..
+router.put('/findClass', async (req, res) => {
+    const classToGet = await classesSchema.find({classKey: req.body.classKey});
+    res.status(201).json({message: "Found class", classInfo: classToGet})
+});
+
+router.post('/addAssignment', async (req, res) => {
+    let classToGet = await classesSchema.find({classKey: req.body.classKey});
+    classToGet = classToGet[0]
+    const leng = Object.keys(classToGet.assignments).length
+    classToGet.assignments[leng] = req.body.classKey + "_" + req.body.problem + "_" + leng;
+    let problemSet = req.body.problemSet;
+    problemSet = JSON.parse(problemSet);
+    for(obj of Object.keys(problemSet)){
+        await axios.post("http://localhost:9000/testcases/addTestCase", {
+            input: problemSet[obj].input,
+            output: problemSet[obj].output,
+            pid: req.body.classKey + "_" + req.body.problem + "_" + leng,
+            score: problemSet[obj].score,
+            example: problemSet[obj].example
+        })
+    }
+    await classToGet.save();
+    res.status(201).json({message: "Added Assignment"})
+})
 
 module.exports = router;
