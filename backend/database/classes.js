@@ -55,20 +55,31 @@ router.post('/addAssignment', async (req, res) => {
     let classToGet = await classesSchema.find({classKey: req.body.classKey});
     classToGet = classToGet[0]
     const leng = Object.keys(classToGet.assignments).length
-    classToGet.assignments[leng] = req.body.classKey + "_" + req.body.problem + "_" + leng;
+    const apid = req.body.classKey + "_" + req.body.problem + "_" + leng
+    classToGet.assignments[leng] = (apid, req.body.startdate, req.body.enddate, []);
     let problemSet = req.body.problemSet;
     problemSet = JSON.parse(problemSet);
     for(obj of Object.keys(problemSet)){
         await axios.post("http://localhost:9000/testcases/addTestCase", {
             input: problemSet[obj].input,
             output: problemSet[obj].output,
-            pid: req.body.classKey + "_" + req.body.problem + "_" + leng,
+            pid: apid,
             score: problemSet[obj].score,
             example: problemSet[obj].example
         })
     }
     await classToGet.save();
     res.status(201).json({message: "Added Assignment"})
+})
+
+router.post('/updatePrix', async (req, res) => {
+    // Prix Updates would need the list of assingments, and start and end...
+    let classToGet = await classesSchema.find({classKey: req.body.classKey});
+    classToGet = classToGet[0];
+    const leng = Object.keys(classToGet.prix).length;
+    classToGet.prix[leng] = (req.body.assignmentList, req.body.startdate, req.body.enddate);
+    classToGet.save();
+    res.status(201).json({message: "Updated Prix"});
 })
 
 module.exports = router;

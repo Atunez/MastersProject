@@ -50,13 +50,14 @@ function GetProblemPage(){
     return (
         <div>
             {exampleTestCases.map(test => {
-                return (<div> 
+                return (
+                <div> 
                     {test.input}
                     <br />
                     {test.output}
                     <br />
                     {test.score}
-                </div>);
+                </div>)
             })}
             <br />
             Put in a Main.java File:
@@ -65,7 +66,6 @@ function GetProblemPage(){
             {({ getRootProps, getInputProps }) => (
                 <div {...getRootProps({ className: "dropzone" })}>
                 <input {...getInputProps()} />
-                <p>Drag'n'drop files, or click to select files</p>
                 </div>
             )}
             </Dropzone>

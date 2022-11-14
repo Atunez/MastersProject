@@ -15,13 +15,22 @@ function TeacherClassPage(e){
                 </Button>
             </Grid>
             <Grid item>
-                <Button variant="contained" onClick={e => {navigate("/createGrandsPrix", { state: {key: location.state.key}})}}>
-                    Create Grands Prix
+                <Button variant="contained" onClick={e => {navigate("/GrandsPrix", { state: {key: location.state.key}})}}>
+                    Update Grands Prix
+                </Button>
+            </Grid>
+            <Grid item>
+                <Button variant="contained" onClick={e => {navigate("/showGrandsPrix", { state: {key: location.state.key}})}}>
+                    Show Grands Prix
                 </Button>
             </Grid>
         </Grid>
         <br />
         Hello 
+        <br />
+        Show All Participants
+        <br />
+        Show Assignments
     </div>;
     return TopBar("Class Page, Class: " + location.state.key.className, output); 
 }

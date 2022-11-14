@@ -107,6 +107,8 @@ function InputTestCases(){
         axios.post("http://localhost:9000/classes/addAssignment", {
             classKey: location.state.key.classKey,
             problem: problemName,
+            startdate: "e",
+            enddate: "e",
             problemSet: getProblemSet()
         })  
       }

@@ -10,7 +10,8 @@ import StudentPage from "./Student/StudentPage";
 import TeacherClassPage from "./Teacher/TeacherClassPage";
 import GetProblemPage from "./Student/StudentProblemPage";
 import MainPage from "./MainPage";
-import CreateGrandsPrix from "./Teacher/CreateGrandsPrix";
+import GrandsPrix from "./Teacher/TeacherUpdateGrandsPrix";
+import ShowGrandsPrix from "./ShowGrandsPrix";
 
 export default function App() {
   return (
@@ -23,7 +24,8 @@ export default function App() {
         <Route path="/TeacherPage" element={<TeacherPage />} />
         <Route path="/StudentPage" element={<StudentPage />} />
         <Route path="/Logout" element={<Logout />} />
-        <Route path="/createGrandsPrix" element={<CreateGrandsPrix />} />
+        <Route path="/GrandsPrix" element={<GrandsPrix />} />
+        <Route path="/ShowGrandsPrix" element={<ShowGrandsPrix />} />
         <Route path="/student/:classKey" element={<StudentClassPage />} />
         <Route path="/teacher/:classKey" element={<TeacherClassPage />} />
         <Route path="/student/problem/:pid" element={<GetProblemPage />} />
