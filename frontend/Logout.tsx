@@ -10,6 +10,7 @@ function Logout(){
         removeCookie("userEmail")
         removeCookie("firstName")
         removeCookie("lastName")
+        removeCookie("fullName")
     }, [])
     return (
         <div className="Logout">

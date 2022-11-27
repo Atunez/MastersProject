@@ -10,12 +10,13 @@ interface  GoogleToken {
     hd: String,
     email: String,
     family_name: String,
-    given_name: String
+    given_name: String,
+    name: String
 }
 
 function Login(){
     let navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(["userType", "userEmail", "firstName", "lastName"]);
+    const [cookies, setCookie] = useCookies(["userType", "userEmail", "firstName", "lastName", "fullName"]);
 
     function HandleUserLogin(resp: any){
         // Need to store this in a cookie...
@@ -25,7 +26,6 @@ function Login(){
         // if the user isn't from AppState, then we can kick them out...
         var goTo = "/UnauthenticatedUser";
         var userType = "Unauthenticated";
-    
         if(userObj.hd != "appstate.edu" && userObj.email != "nametaken1010@gmail.com" && userObj.email != "nametaken102@gmail.com"){
             goTo = "/UnauthenticatedUser";
         }else{
@@ -42,6 +42,7 @@ function Login(){
         setCookie("userEmail", userObj.email, {path: "/"});
         setCookie("firstName", userObj.given_name, {path: "/"});
         setCookie("lastName", userObj.family_name, {path: "/"});
+        setCookie("fullName", userObj.name, {path: "/"});
         navigate(goTo);
     }
 

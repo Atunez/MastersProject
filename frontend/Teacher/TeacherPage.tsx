@@ -25,14 +25,14 @@ function TeacherPage(){
         axios.post("http://localhost:9000/classes/addClass", {
             className: className,
             password: classPwd,
-            instructor: "GetFromCookie"
+            instructor: cookies.fullName
         }).then((res) => {getNewClassCards()});
     };
 
     const getNewClassCards = () => {
         axios.post('http://localhost:9000/user/getUserClasses', {
             isTeacher: cookies.userType === "Teacher",
-            instructor: "GetFromCookie",
+            instructor: cookies.fullName,
             email: cookies.userEmail
             }).then((res) => {setClassCards(GetClassCards(res["data"]["classesInfo"], classRoomClicked))})        
     }

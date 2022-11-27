@@ -39,6 +39,8 @@ function InputTestCases(){
         navigate("/TeacherPage")
       }
     }, [])
+
+    const stateKey = location.state.key.classKey
     console.log(location.state)
 
     // Move Files from readFiles format to an actual TestCases format...
@@ -100,7 +102,7 @@ function InputTestCases(){
       return JSON.stringify(output)
     }
 
-    const submitProblem = () => {
+    const submitProblem = async () => {
       if(problemName !== ""){
         console.log("Submitting Problem...")
 
@@ -112,7 +114,8 @@ function InputTestCases(){
             problemSet: getProblemSet()
         })  
       }
-      navigate(-1)
+
+      navigate(-1) 
     }
     // JSX To return....
     return (
