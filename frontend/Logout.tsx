@@ -8,6 +8,8 @@ function Logout(){
     useEffect(() => {
         removeCookie("userType")
         removeCookie("userEmail")
+        removeCookie("firstName")
+        removeCookie("lastName")
     }, [])
     return (
         <div className="Logout">

@@ -6,6 +6,7 @@ import { useState, useEffect, useRef } from "react";
 import { Card, CardActionArea, CardContent, Grid, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import Dropzone from "react-dropzone";
+import dayjs, { Dayjs } from 'dayjs';
 
 interface TestCases {
     input: String,
@@ -22,6 +23,8 @@ function GetProblemPage(){
             navigate(-1);
         }
     },[])
+
+    console.log(location.state.key)
 
     useEffect(() => {axios.put('http://localhost:9000/testCases/getExampleCases', {
         pid: location.state.pid
@@ -43,7 +46,10 @@ function GetProblemPage(){
         const realFile = acceptedFiles.filter(x => x.name === "Main.java")[0]
         readTestFileData(realFile).then(res => axios.post("http://localhost:9000/submissions/submitSolution", {
             inputProgram: res,
-            pid: location.state.pid
+            pid: location.state.pid,
+            classKey: location.state.key,
+            name: "nt102",
+            time: dayjs().toString()
         }).then(res => console.log(res)))
     }
 

@@ -4,13 +4,10 @@ var axios = require('axios');
 const usersSchema = require("./usersSchema");
 const classesSchema = require("./classesSchema");
 
-function checkClassPassword(){
-    return false;
-}
-
 router.put('/addClassToUser', async (req, res) => {
     // Then submit the class to the database
     const user = await usersSchema.findOne({email: req.body.email});
+    const classtoadd = await classesSchema.findOne({classKey: req.body.classKey});
     // Guard for user existance...
     if(user == null){
         const newUser = new usersSchema({
@@ -32,14 +29,18 @@ router.put('/addClassToUser', async (req, res) => {
         res.status(201).json({message: "User contains class..."});
         return;
     }
-    // Guard for correct password
-    if(checkClassPassword()){
+    axios.put('http://localhost:9000/classes/addStudentToClass', {
+        classKey: req.body.classKey,
+        classPassword: req.body.password,
+        studentObj: req.body.firstName + req.body.lastName
+    }).then(e => {    
+        user.classesTaking[Object.keys(user.classesTaking).length] = req.body.classKey
+        user.save();
+        res.status(201).json({message: "Added class to user list"})
+    }).catch(e => {
         res.status(401).json({message: "Incorrect Password Given..."});
-        return;
-    }
-    user.classesTaking[Object.keys(user.classesTaking).length] = req.body.classKey
-    user.save();
-    res.status(201).json({message: "Added class to user list"})
+    })
+    return;
 });
 
 router.post('/getUserClasses', async (req, res) => {
@@ -52,7 +53,12 @@ router.post('/getUserClasses', async (req, res) => {
         return;
     }else{
         const student = await usersSchema.find({email: req.body.email});
-        res.status(201).json({message: "Found classes Sir2", classesInfo: Object.values(student[0].classesTaking), weird: "Ye"});
+        var classes = []
+        if(student.length != 0){
+            console.log(student)
+            classes = Object.values(student[0].classesTaking)
+        }
+        res.status(201).json({message: "Found classes Sir2", classesInfo: classes, weird: "Ye"});
         return;
     }
 });

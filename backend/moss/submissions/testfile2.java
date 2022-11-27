@@ -1,0 +1,1 @@
+import java.util.Scanner;public class Main{public static void main(String[] args) {Scanner kb = new Scanner(System.in);String tester = "Make sure this works...";String line = kb.nextLine();System.out.println(line);}}

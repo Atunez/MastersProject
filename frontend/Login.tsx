@@ -9,11 +9,13 @@ declare var google: any;
 interface  GoogleToken {
     hd: String,
     email: String,
+    family_name: String,
+    given_name: String
 }
 
 function Login(){
     let navigate = useNavigate();
-    const [cookies, setCookie] = useCookies(["userType", "userEmail"]);
+    const [cookies, setCookie] = useCookies(["userType", "userEmail", "firstName", "lastName"]);
 
     function HandleUserLogin(resp: any){
         // Need to store this in a cookie...
@@ -24,7 +26,7 @@ function Login(){
         var goTo = "/UnauthenticatedUser";
         var userType = "Unauthenticated";
     
-        if(userObj.hd != "appstate.edu" && userObj.email != "nametaken1010@gmail.com"){
+        if(userObj.hd != "appstate.edu" && userObj.email != "nametaken1010@gmail.com" && userObj.email != "nametaken102@gmail.com"){
             goTo = "/UnauthenticatedUser";
         }else{
             // If the user is a teacher...
@@ -38,6 +40,8 @@ function Login(){
         }
         setCookie("userType", userType, {path: "/"});
         setCookie("userEmail", userObj.email, {path: "/"});
+        setCookie("firstName", userObj.given_name, {path: "/"});
+        setCookie("lastName", userObj.family_name, {path: "/"});
         navigate(goTo);
     }
 

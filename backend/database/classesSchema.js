@@ -31,12 +31,12 @@ const classesSchema = new mongoose.Schema(
         // Assignments should hold the grade for each student too...
         assignments: {
             required: false,
-            type: [(String, String, String, [String])]
+            type: [{aid: String, endTime: String, startTime: String, grades: [{name: String, grade: Number, time: String, code: String}]}]
         }, 
         // Prixs are just a list of assignment IDs....
         prix: {
             required: false,
-            type: [([String], String, String)]
+            type: [{problemList: [String], startTime: String, endTime: String}]
         }
     }, 
     {timestamps: true});

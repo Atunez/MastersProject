@@ -38,7 +38,7 @@ function StudentPage(){
         axios.put("http://localhost:9000/user/addClassToUser", {
             email: cookies.userEmail,
             firstName: "Test",
-            lastName: "User",
+            lastName: "User 2",
             classKey: classKey,
             password: classPwd
         }).then((res) => {console.log(res); getNewClassCards();});

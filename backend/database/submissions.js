@@ -3,6 +3,7 @@ var router = express.Router();
 var axios = require('axios');
 const testCasesScheme = require("./testCasesSchema");
 const submissionsScheme = require("./submissionsSchema");
+const classesSchema = require('./classesSchema');
 
 // temp cuz im lazy for now...
 function sleep(ms) {
@@ -78,10 +79,17 @@ router.post('/submitSolution', async (req, res) => {
     newSubmission.save((err) => {
         if(err){
             res.status(500).json({message: "Error adding new submission to DB..."});
-        }else{
-            res.status(201).json({message: "Added submission to DB...", results: totalGrade, judgeResults: submissionRecord});
         }
     });
+    axios.post('http://localhost:9000/classes/updateGrade', {
+        classKey: req.body.classKey,
+        name: req.body.name,
+        score: totalGrade.reduce((p, c) => p + c, 0),
+        pid: req.body.pid,
+        time: req.body.time,
+        code: req.body.inputProgram
+    }).then(e => res.status(201).json({message: "Updated everything correctly"})).catch(e => res.status(404).json({message: "Updated everything NOT correctly"}))
+
 });
 
 module.exports = router;

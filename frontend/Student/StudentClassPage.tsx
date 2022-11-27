@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, Grid, Typography } from "@mui/material";
+import { Button, Card, CardActionArea, CardContent, Grid, Typography } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 
 
@@ -17,13 +17,17 @@ function StudentClassPage(e){
     }
 
     return (        <div className="ClassCards">
+    <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
+        <Button variant="contained" onClick={e => {navigate("/showGrandsPrix", { state: {key: location.state.key}})}}> Show Prix </Button>
+    </div>    
+    Assignments:
     <Grid container spacing={3}>
-        {location.state.key.assignments.map(pname => {return (<Grid item xs={12}> 
+        {location.state.key.assignments.map(pobj => {return (<Grid item xs={12}> 
             <Card sx={{ maxWidth: 345 }}> 
-                <CardActionArea onClick={e => cardClicked(pname)}>
+                <CardActionArea onClick={e => cardClicked(pobj.aid)}>
                     <CardContent>
                         <Typography>
-                            {pname}
+                            {pobj.aid}
                         </Typography>
                     </CardContent>
                 </CardActionArea>

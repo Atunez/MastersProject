@@ -2,7 +2,6 @@ import { Button, Grid } from "@mui/material";
 import { useLocation, useNavigate } from "react-router-dom";
 import TopBar from "../ElementWrapper";
 
-
 function TeacherClassPage(e){
     const location = useLocation();
     const navigate = useNavigate();
@@ -36,3 +35,4 @@ function TeacherClassPage(e){
 }
 
 export default TeacherClassPage;
+
