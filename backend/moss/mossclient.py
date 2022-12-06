@@ -1,6 +1,7 @@
 import moss
 import sys
 import os
+import json
 import shutil
 
 
@@ -9,15 +10,20 @@ mode = int(sys.argv[1])
 
 def addSubmission():
     # In the case of addSubmission, you just need to know what to put, and what to name it...
-    nameoffile = sys.argv[2]
-    contentoffile = sys.argv[3]
-    if not os.path.isdir("./submissions"):
-        os.mkdir("./submissions")
-    else:
-        fp = open("./submissions/" + nameoffile, 'w')
-        fp.write(contentoffile)
-        fp.close()
-    print("Added File")
+    print(sys.argv[2])
+    # usercontent = json.loads(sys.argv[2])
+    # print(usercontent.name)
+    # nameoffile = usercontent["name"] + ".java"
+    # nameoffile.replace(" ", "")
+    # contentoffile = usercontent["code"]
+    # if not os.path.isdir("./submissions"):
+    #     os.mkdir("./submissions")
+    # else:
+    #     fp = open("./submissions/" + nameoffile, 'w')
+    #     fp.write(contentoffile)
+    #     fp.close()
+    # print("Added File")
+    # print(sys.argv)
     return
 
 def runMoss():

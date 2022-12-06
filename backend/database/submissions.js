@@ -50,7 +50,7 @@ router.post('/submitSolution', async (req, res) => {
                 headers: {}
             }
             // Remove this to a different class...
-            await sleep(1000);
+            await sleep(3000);
             await axios(resultsConfig).then(resps => {
                 // If you failed the test then no need to continue...
                 submissionRecord.push(JSON.stringify(resps.data));

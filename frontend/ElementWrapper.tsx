@@ -8,16 +8,26 @@ import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import Login from './Login';
 import { useCookies } from 'react-cookie';
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 
 
 function TopBar(barLabel, elemToShow){
     const [cookies, setCookie] = useCookies(["userType", "userEmail"]);
+    const [unit, setUnit] = useState(0);
+    const navigate = useNavigate();
+
+    useEffect(() => {if(unit == 1){navigate(-1)}}, [unit])
+
+    const handleGoBack = () => {setUnit(unit+1)}
     var homeRef = "/";
     switch(cookies.userType){
         case "Student":
-            homeRef = "/UserPage";
+            homeRef = "/StudentPage";
+            break;
         case "Teacher":
             homeRef = "/TeacherPage";
+            break;
     }
 
     return (
@@ -38,6 +48,7 @@ function TopBar(barLabel, elemToShow){
                 //letterSpacing: '.3rem',
                 color: 'inherit',
                 textDecoration: 'none',
+                width: '11%'
                 }}
             >
                 Project
@@ -45,6 +56,7 @@ function TopBar(barLabel, elemToShow){
               <Typography variant="h6" component="div" sx={{ flexGrow: 1, textAlign: "center" }}>
                 {barLabel}
               </Typography>
+              <Button color="inherit" onClick={handleGoBack}>Go Back</Button>
               <Button color="inherit" href="\login">Login</Button>
               <Button color="inherit" href="\logout">Logout</Button>
             </Toolbar>

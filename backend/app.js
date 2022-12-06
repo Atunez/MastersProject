@@ -16,12 +16,13 @@ var app = express();
 // redo this so that unless either events happen you dont do the rest....
 mongoose.connect(process.env.DATABASE_URI);
 mongoose.connection.on('error', (err) => console.log(err));
-mongoose.connection.on('open', () => console.log("Connect to DB"));
+mongoose.connection.on('open', () => console.log("Connected to DB"));
 
 var testCasesAPI = require("./database/testCases");
 var submissionsAPI = require("./database/submissions");
 var classesAPI = require("./database/classes");
 var usersAPI = require("./database/users");
+var mossAPI = require("./moss/mossJS");
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -38,6 +39,7 @@ app.use('/testcases', testCasesAPI);
 app.use('/submissions', submissionsAPI);
 app.use('/classes', classesAPI);
 app.use('/user', usersAPI);
+app.use('/moss', mossAPI);
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);

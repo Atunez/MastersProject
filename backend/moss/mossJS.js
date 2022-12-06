@@ -1,22 +1,40 @@
 var express = require('express');
 var router = express.Router();
 const { spawn } = require('child_process');
+const exec = require("child_process").exec;
+const path = require("path");
+const { default: axios } = require('axios');
+const fs = require("fs");
 
-const content = "import java.util.Scanner;public class Main{public static void main(String[] args) {Scanner kb = new Scanner(System.in);String tester = \"Make sure this works...\";String line = kb.nextLine();System.out.println(line);}}"
-const content2 = "import java.util.Scanner;public class Main{public static void main(String[] args) {Scanner kb = new Scanner(System.in);}}"
 var moss;
-moss = spawn('python', ['mossclient.py', 1, "testfile1.java", content])
-moss.stdout.on('data', e => {console.log(e.toString())})
-
-
 const mossid = 250133102
-moss = spawn('python', ['mossclient.py', 1, "testfile2.java", content])
-moss.stdout.on('data', e => {console.log(e.toString())})
 
-moss = spawn('python', ['mossclient.py', 1, "testfile3.java", content2])
-moss.stdout.on('data', e => {console.log(e.toString())})
+router.post('/generateReport', async (req, res) => {
+    const allUserInputs = req.body.content
 
-moss = spawn('python', ['mossclient.py', 2, mossid])
+    // for(const user of allUserInputs){
+    //     const filename = user.name + ".java"
+    // }
+    Promise.all(allUserInputs.map(e => {fs.writeFile("./submissions/" + e.name + ".java", e.code, e => {console.log("Wrote Smth" + e)})}))
+    .then(e => {console.log("Added all files")
+    exec("python ./moss/mossclient.py 2 " + mossid, async (err, out) => {
+        console.log(out.toString("utf8"))
+        fs.readdir("./submissions/", (err, files) => {
+            Promise.all(files.map(e => {fs.unlink(path.join("./submissions/", e), () => {})})).then(e => {
+                res.status(201).json({message: "Got report", url: out.toString("utf8")});
+            })
+        })
+    })
+    // const reportURL = spawn('python', ['./moss/mossclient.py', 2, mossid])
+    // reportURL.on('data', e => {
+    //     console.log(e.toString())
+    //     //res.status(201).json({message: "Got report", url: e.toString()});
+    // })
+    // reportURL.on('exit', e => {
+    //     fs.rmdir("./submissions", {recursive: true}, () => console.log("Removed Directory"))
+    // })
+    })
+    .catch(e => console.log("Smth went wrong" + e))
+})
 
-moss.stdout.on('data', e => {console.log(e.toString())})
-
+module.exports = router;

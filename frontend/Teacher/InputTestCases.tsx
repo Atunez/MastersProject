@@ -11,6 +11,10 @@ import Grid from '@mui/material/Grid';
 import { Button, FormControlLabel, FormGroup, Switch, TextField } from "@mui/material";
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import TopBar from "../ElementWrapper";
+import { LocalizationProvider, DateTimePicker } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import dayjs, { Dayjs } from "dayjs";
 
 interface readFiles {
     name: String,
@@ -31,6 +35,8 @@ function InputTestCases(){
     const [grades, setGrades] = useState<number[]>([]);
     const [examples, setExamples] = useState<boolean[]>([]);
     const [problemName, setProblemName] = useState("");
+    const [startDate, setStartDate] = useState<Dayjs | null>(dayjs());
+    const [endDate, setEndDate] = useState<Dayjs | null>(dayjs().add(7, 'day'));
 
     const location = useLocation();
     const navigate = useNavigate();
@@ -109,8 +115,8 @@ function InputTestCases(){
         axios.post("http://localhost:9000/classes/addAssignment", {
             classKey: location.state.key.classKey,
             problem: problemName,
-            startdate: "e",
-            enddate: "e",
+            startdate: startDate?.toString(),
+            enddate: endDate?.toString(),
             problemSet: getProblemSet()
         })  
       }
@@ -118,13 +124,46 @@ function InputTestCases(){
       navigate(-1) 
     }
     // JSX To return....
-    return (
+    const output = (
       <div className="App">
-        <TextField 
-          label="Problem Name"
-          value={problemName}
-          onChange={e => {setProblemName(e.target.value)}}
-        />
+
+
+        <Grid container spacing={2}>
+          <Grid item xs={12}>
+            <TextField 
+            label="Problem Name"
+            value={problemName}
+            onChange={e => {setProblemName(e.target.value)}}
+            />
+          </Grid>
+          <Grid item xs={12}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                renderInput={(props) => <TextField {...props} />}
+                label="Start Date"
+                value={startDate}
+                onChange={(newValue) => {
+                  setStartDate(newValue);
+                }}
+              />
+            </LocalizationProvider>
+          </Grid>
+          <Grid item xs={12}>
+            <LocalizationProvider dateAdapter={AdapterDayjs}>
+              <DateTimePicker
+                renderInput={(props) => <TextField {...props} />}
+                label="End Date"
+                value={endDate}
+                onChange={(newValue) => {
+                  setEndDate(newValue);
+                }}
+              />
+            </LocalizationProvider>
+          </Grid>
+        </Grid>
+
+        <br />
+
         <Dropzone onDrop={handleDrop}>
           {({ getRootProps, getInputProps }) => (
             <div {...getRootProps({ className: "dropzone" })}>
@@ -134,12 +173,12 @@ function InputTestCases(){
           )}
         </Dropzone>
         <div>
-          <strong>Files and Contents:</strong>
+          {/* <strong>Files and Contents:</strong>
           <ul>
             {moreUseFiles.map(moreUseFiless => (
               <li key={moreUseFiless.name as any}>{moreUseFiless.name} {moreUseFiless.content}</li>
             ))}
-          </ul>
+          </ul> */}
           {testcases.map((files, index) => {
             return (<Accordion>
                 <AccordionSummary
@@ -195,6 +234,7 @@ function InputTestCases(){
         </Button>
       </div>
     );
+    return TopBar("Create New Problem", output);
   }
 
 export default InputTestCases;

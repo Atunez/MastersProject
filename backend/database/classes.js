@@ -88,7 +88,7 @@ router.post('/updatePrix', async (req, res) => {
     if(classToGet.prix != undefined){
         leng = Object.keys(classToGet.prix).length;
     }
-    classToGet.prix[leng] = {problemList: req.body.assignmentList, startTime: req.body.startdate, endTime: req.body.enddate};
+    classToGet.prix[leng] = {problemList: req.body.assignmentList, startTime: req.body.startdate, endTime: req.body.enddate, gradeInfo: req.body.gradeInfo};
     classToGet.save();
     res.status(201).json({message: "Updated Prix"});
 })

@@ -19,10 +19,18 @@ router.put('/addClassToUser', async (req, res) => {
             if(err){
                 res.status(500).json({message: "Error adding new User (& Class) to DB..."});
             }else{
-                res.status(201).json({message: "Added User (& Class) to DB..."});
+                axios.put('http://localhost:9000/classes/addStudentToClass', {
+                    classKey: req.body.classKey,
+                    classPassword: req.body.password,
+                    studentObj: req.body.firstName + " " + req.body.lastName
+                    }).then(e => {    
+                        res.status(201).json({message: "Added class to user list"})
+                    }).catch(e => {
+                        res.status(401).json({message: "Incorrect Password Given..."});
+                    })
             }
         });
-        return;
+        return
     }
     // Guard for adding duplicate classes
     if(Object.values(user.classesTaking).includes(req.body.classKey)){
@@ -32,7 +40,7 @@ router.put('/addClassToUser', async (req, res) => {
     axios.put('http://localhost:9000/classes/addStudentToClass', {
         classKey: req.body.classKey,
         classPassword: req.body.password,
-        studentObj: req.body.firstName + req.body.lastName
+        studentObj: req.body.firstName + " " + req.body.lastName
     }).then(e => {    
         user.classesTaking[Object.keys(user.classesTaking).length] = req.body.classKey
         user.save();

@@ -36,7 +36,7 @@ const classesSchema = new mongoose.Schema(
         // Prixs are just a list of assignment IDs....
         prix: {
             required: false,
-            type: [{problemList: [String], startTime: String, endTime: String}]
+            type: [{problemList: [String], startTime: String, endTime: String, gradeInfo: String}]
         }
     }, 
     {timestamps: true});

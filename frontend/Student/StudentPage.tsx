@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import { Box, Button, FormControl, FormHelperText, InputLabel, TextField } from "@mui/material";
 import axios from "axios";
 import GetClassCards from "../ClassCards";
+import TopBar from "../ElementWrapper";
 
 function StudentPage(){
     const [cookies, setCookie] = useCookies();
@@ -29,16 +30,19 @@ function StudentPage(){
     const getNewClassCards = () => {
         axios.post('http://localhost:9000/user/getUserClasses', {
             isTeacher: cookies.userType === "Teacher",
-            instructor: "GetFromCookie",
+            instructor: cookies.fullName,
             email: cookies.userEmail
             }).then((res) => {Promise.all(res["data"]["classesInfo"].map(getClassInfo)).then(res => setClassCards(GetClassCards(res, classRoomClicked)))})        
     }
 
     const handleJoinClass = e => {
+        if(classKey == "" || classPwd == ""){
+            return;
+        }
         axios.put("http://localhost:9000/user/addClassToUser", {
             email: cookies.userEmail,
-            firstName: "Test",
-            lastName: "User 2",
+            firstName: cookies.firstName,
+            lastName: cookies.lastName,
             classKey: classKey,
             password: classPwd
         }).then((res) => {console.log(res); getNewClassCards();});
@@ -48,8 +52,9 @@ function StudentPage(){
         navigate("/student/" + classObj.classKey, { state: {key: classObj}});
     }
 
-    return (
+    const output = (
         <div className="StudentPage">
+            <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
             <Box component="form" sx={{'& .MuiTextField-root': { m: 1, width: '25ch' },}}>
                 <div>
                     <TextField
@@ -69,13 +74,16 @@ function StudentPage(){
                         onChange={e => setClassPwd(e.target.value)}
                         />    
                 </div>
-                <div>
+                <div style={{display: 'flex',  justifyContent:'center', alignItems:'center'}}>
                     <Button variant="contained" onClick={handleJoinClass}> Join Class </Button>
                 </div>
             </Box>
+            </div>
+            <br />
             {classCards}
         </div>
     )
+    return TopBar("Student Home Page", output);
 }
 
 export default StudentPage;
