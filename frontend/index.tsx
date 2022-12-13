@@ -4,6 +4,7 @@ import { CookiesProvider } from 'react-cookie';
 import App from './router';
 
 const root = ReactDOM.createRoot(document.getElementById('root')!);
+
 root.render(
   <CookiesProvider>
     <App />

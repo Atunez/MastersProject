@@ -12,6 +12,18 @@ import GetProblemPage from "./Student/StudentProblemPage";
 import MainPage from "./MainPage";
 import GrandsPrix from "./Teacher/TeacherUpdateGrandsPrix";
 import ShowGrandsPrix from "./ShowGrandsPrix";
+import { useState } from "react";
+
+export function DarkModeInfo() {
+  const [darkMode, setDarkMode] = useState(false)
+  const switchDM = () => {setDarkMode(!darkMode)}
+  if(darkMode){
+    document.documentElement.classList.add('dark')
+  }else{
+    document.documentElement.classList.remove('dark')
+  }
+  return switchDM
+}
 
 export default function App() {
   return (
